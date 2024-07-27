@@ -1,0 +1,38 @@
+import logging
+import sys
+
+# Настройка логирования
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+
+def check_prime(num):
+    logging.info(f"Начало проверки числа {num} на простоту")
+
+    if not 1 < num <= 100000:
+        logging.error(f"Число {num} не в диапазоне от 2 до 100000")
+        print("Число должно быть больше 1 и меньше 100000")
+    else:
+        is_prime = True
+        logging.info(f"Число {num} в допустимом диапазоне, начинается проверка на простоту")
+        for i in range(2, int(num ** 0.5) + 1):
+            if num % i == 0:
+                logging.info(f"Число {num} делится на {i}, не является простым")
+                print("Не является простым")
+                is_prime = False
+                break
+        if is_prime:
+            logging.info(f"Число {num} является простым")
+            print("Простое")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        logging.error("Неверное количество аргументов. Ожидался 1 аргумент: num")
+        print("Использование: python script_name.py num")
+    else:
+        try:
+            num = int(sys.argv[1])
+            check_prime(num)
+        except ValueError:
+            logging.error("Аргумент должен быть числом")
+            print("Ошибка: аргумент должен быть числом")
