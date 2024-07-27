@@ -1,0 +1,50 @@
+import logging
+import sys
+
+# Настройка логирования
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+def pack_backpack(items, max_weight):
+    sorted_items = sorted(items.items(), key=lambda item: item[1])
+    logging.info(f"Отсортированные предметы по весу: {sorted_items}")
+
+    backpack = {}
+    current_weight = 0
+
+    # Добавляем предметы в рюкзак, пока не достигнем максимального веса
+    for item, weight in sorted_items:
+        if current_weight + weight <= max_weight:
+            backpack[item] = weight
+            current_weight += weight
+            logging.info(f"Добавлен предмет: {item}, вес: {weight}. Текущий общий вес: {current_weight}")
+        else:
+            logging.info(f"Предмет {item} с весом {weight} не добавлен. Превышает максимальный вес рюкзака.")
+
+    logging.info(f"Окончательный состав рюкзака: {backpack}")
+    return backpack
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        logging.error("Неверное количество аргументов.")
+        print("Использование: python script_name.py item1:weight1 item2:weight2 ... max_weight")
+    else:
+        try:
+            # Parsing the command-line arguments
+            input_items = sys.argv[1:-1]
+            max_weight = float(sys.argv[-1])
+
+            items = {}
+            for item in input_items:
+                name, weight = item.split(':')
+                items[name] = float(weight)
+
+            logging.info(f"Введенные предметы: {items}")
+            logging.info(f"Максимальный вес рюкзака: {max_weight}")
+
+            backpack = pack_backpack(items, max_weight)
+            print(f"Рюкзак: {backpack}")
+
+        except ValueError as e:
+            logging.error(f"Ошибка в значениях аргументов: {e}")
+            print(f"Ошибка: {e}")
